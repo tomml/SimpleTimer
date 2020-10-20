@@ -12,44 +12,47 @@ import AVFoundation
 
 class ViewController: UIViewController {
 
-    var workoutTime = 50
-    var restTime = 35
-    var repeatWorkout = 3
+    var tP = TimerPrimitives()
     
     @IBOutlet weak var textWorkout_Outlet: UITextField!
     @IBOutlet weak var textRest_Outlet: UITextField!
     @IBOutlet weak var textRepeat_Outlet: UITextField!
     
     
-    @IBAction func editChanged(_ sender: Any) {
-        
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         let workoutTimeViewController: SecondViewController =
             segue.destination as! SecondViewController
         
-            workoutTimeViewController.receiveWorkoutTime = workoutTime
-            //workoutTimeViewController.receiveRestTime = restTime
-            workoutTimeViewController.receiveRepeatWorkout = repeatWorkout
+            workoutTimeViewController.receiveWorkoutTime = tP.workoutTime
+            workoutTimeViewController.receiveRestTime = tP.restTime
+            workoutTimeViewController.receiveRepeatWorkout = tP.repeatWorkout
     }
-  
+    
+    func updateView(_ workoutTime: String, _ restTime: String, _ repeatWorkout: String)
+    {
+        textWorkout_Outlet.text = workoutTime
+        textRest_Outlet.text = restTime
+        textRepeat_Outlet.text = repeatWorkout
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        resetToDefaults()
+        
+        updateView(String(tP.workoutTime), String(tP.restTime), String(tP.repeatWorkout))
+    }
+            
+    @IBAction func updateModel_WorkoutTime(_ sender: Any) {
+        tP.workoutTime = Int(textWorkout_Outlet.text!) ?? 0
     }
     
-    func resetToDefaults()
-    {
-        // Reset to defaults
-        workoutTime = 50
-        textWorkout_Outlet.text = String(workoutTime)
-        restTime = 35
-        textRest_Outlet.text = String(restTime)
-        repeatWorkout = 3
-        textRepeat_Outlet.text = String(repeatWorkout)
+    @IBAction func updateModel_RestTime(_ sender: Any) {
+        tP.restTime = Int(textRest_Outlet.text!) ?? 0
+    }
+    
+    @IBAction func updateModel_RepeatWorkout(_ sender: Any) {
+        tP.repeatWorkout = Int(textRepeat_Outlet.text!) ?? 0
     }
 }
 

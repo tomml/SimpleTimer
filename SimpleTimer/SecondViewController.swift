@@ -11,7 +11,7 @@ import AVFoundation
 
 class SecondViewController: UIViewController {
     
-    var workoutTime = 50
+    var workoutTime = 5
     var RestTime = 35
     var RepeatWorkout = 3
     
