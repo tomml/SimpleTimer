@@ -14,6 +14,7 @@
 		392CDFC924FC108D00F050F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 392CDFC724FC108D00F050F0 /* Main.storyboard */; };
 		392CDFCB24FC108E00F050F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 392CDFCA24FC108E00F050F0 /* Assets.xcassets */; };
 		392CDFCE24FC108E00F050F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 392CDFCC24FC108E00F050F0 /* LaunchScreen.storyboard */; };
+		395C4D4625420C1100B24453 /* WorkoutSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395C4D4525420C1100B24453 /* WorkoutSet.swift */; };
 		39B455C7253F33FB0010F3AC /* TimerPrimitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B455C6253F33FB0010F3AC /* TimerPrimitives.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		392CDFCA24FC108E00F050F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		392CDFCD24FC108E00F050F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		392CDFCF24FC108E00F050F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		395C4D4525420C1100B24453 /* WorkoutSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSet.swift; sourceTree = "<group>"; };
 		39B455C6253F33FB0010F3AC /* TimerPrimitives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPrimitives.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 				392CDFCC24FC108E00F050F0 /* LaunchScreen.storyboard */,
 				392CDFCF24FC108E00F050F0 /* Info.plist */,
 				39B455C6253F33FB0010F3AC /* TimerPrimitives.swift */,
+				395C4D4525420C1100B24453 /* WorkoutSet.swift */,
 			);
 			path = SimpleTimer;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				395C4D4625420C1100B24453 /* WorkoutSet.swift in Sources */,
 				390586FF25054CC3007E27D7 /* SecondViewController.swift in Sources */,
 				39B455C7253F33FB0010F3AC /* TimerPrimitives.swift in Sources */,
 				392CDFC624FC108D00F050F0 /* ViewController.swift in Sources */,
