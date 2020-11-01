@@ -20,6 +20,8 @@ class SecondViewController: UIViewController {
     var receiveRepeatWorkout: Int = 0
     
     var countdownTime: Int = 10
+    
+    var lblText: String = "Workout"
 
     @IBOutlet weak var btnPauseWorkout: UIButton!
     @IBOutlet weak var lblWorkoutTime: UILabel!
@@ -41,7 +43,10 @@ class SecondViewController: UIViewController {
         startTimer(#selector(countdownAction))
         
         // Setup the initial view elements
-        updateWorkoutView((String(countdownTime)), false, "", false)
+        setupWorkoutView((String(countdownTime)), true,
+                                 "", false,
+                                 "Prepare!", true,
+                                 false)
     }
     
     @objc func countdownAction() {
@@ -53,12 +58,16 @@ class SecondViewController: UIViewController {
         if (countdownTime == 0) {
             // Stop countdown timer
             timer.invalidate()
-            // Prepare workout phase
-            setBackgroundColor(UIColor.systemBlue, UIColor.systemBlue)
-            lblPrepare.text = ""
             // Start workout timer
             startTimer(#selector(workoutAction))
             workout.isWorkoutStepRunning = true
+            // Setup background
+            setBackgroundColor(UIColor.systemBlue, UIColor.systemBlue)
+            // Setup view elements
+            setupWorkoutView((String(workout.workoutStepTimeout)), true,
+                         lblText+" "+String(workout.currentWorkoutStep)+"/"+String(workout.maximumWorkoutSteps), true,
+                         "", false,
+                         true)
         }
         
     }
@@ -67,6 +76,11 @@ class SecondViewController: UIViewController {
     
         // Decrease counter value every seconds
         workout.workoutStepTimeout -= 1
+    
+    
+        if (workout.workoutStepTimeout == 2) {
+            workout.workoutStepFinished?.prepareToPlay() // Prepare to play the sound
+        }
     
         if (workout.workoutStepTimeout == 0) {
             stopTimer()
@@ -83,6 +97,8 @@ class SecondViewController: UIViewController {
                     handleWorkoutSetFinishedAlert(true)
                     // Switch phase
                     workoutState = .rest
+                    // Set Label text
+                    lblText = "Rest"
                 }
                 else {
                     // Setup counter for workout phase
@@ -93,6 +109,8 @@ class SecondViewController: UIViewController {
                     workout.currentWorkoutStep += 1
                     // Switch phase
                     workoutState = .workout
+                    // Set Label text
+                    lblText = "Workout"
                 }
                 startTimer(#selector(workoutAction))
                 workout.isWorkoutStepRunning = true
@@ -104,7 +122,10 @@ class SecondViewController: UIViewController {
             }
         }
     
-        updateWorkoutView((String(workout.workoutStepTimeout)), true, "Workout "+String(workout.currentWorkoutStep)+"/"+String(workout.maximumWorkoutSteps), true)
+        setupWorkoutView((String(workout.workoutStepTimeout)), true,
+                         lblText+" "+String(workout.currentWorkoutStep)+"/"+String(workout.maximumWorkoutSteps), true,
+                         "", false,
+                         true)
     }
     
     func startTimer(_ selectorFunc: Selector) {
@@ -115,22 +136,37 @@ class SecondViewController: UIViewController {
         timer.invalidate()
     }
     
-    func updateWorkoutView(_ timerLabel: String, _ showWorkoutLabel: Bool, _ workoutLblText: String, _ showPauseBtn: Bool) {
-        // Update timeout label
-        lblWorkoutTime.text = timerLabel
+    func setupWorkoutView(_ timerLabelText: String, _ isTimerLabelActive: Bool,
+                          _ workoutStepLabelText: String, _ showWorkoutStepLabel: Bool,
+                          _ prepareLabelText: String, _ showPrepareLabel: Bool,
+                          _ showPauseBtn: Bool) {
+           
+        // Update timer label
+        if (isTimerLabelActive == true) {
+            lblWorkoutTime.text = timerLabelText
+        } else {
+            lblWorkoutTime.text = ""
+        }
+        
         // Update workout step label
-        if (showWorkoutLabel == true) {
-            // Update content
-            lblRepeat.text = workoutLblText
+        if (showWorkoutStepLabel == true) {
+            lblRepeat.text = workoutStepLabelText
         } else {
             lblRepeat.text = ""
         }
-        if (showPauseBtn == true) {
-            btnPauseWorkout.isEnabled = true
-            btnPauseWorkout.setTitle("Pause", for: .normal)
+        
+        // Update prepare label
+        if (showPrepareLabel == true) {
+            lblPrepare.text = prepareLabelText
         } else {
-            btnPauseWorkout.isEnabled = false
-            btnPauseWorkout.setTitle("", for: .normal)
+            lblPrepare.text = ""
+        }
+        
+        // Update button visibility
+        if (showPauseBtn == true) {
+            btnPauseWorkout.isHidden = false
+        } else {
+            btnPauseWorkout.isHidden = true
         }
     }
     
