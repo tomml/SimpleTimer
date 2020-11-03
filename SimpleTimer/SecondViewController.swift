@@ -22,6 +22,9 @@ class SecondViewController: UIViewController {
     var countdownTime: Int = 10
     
     var lblText: String = "Workout"
+    var workoutCounter = 0
+    
+    let appLocalData = UserDefaults.standard
 
     @IBOutlet weak var btnPauseWorkout: UIButton!
     @IBOutlet weak var lblWorkoutTime: UILabel!
@@ -32,6 +35,8 @@ class SecondViewController: UIViewController {
         
         super.viewDidLoad()
         
+        appLocalData.set(workoutCounter, forKey: "workoutCounter")
+        
         // Set the initial timing values for the workout
         workout.workoutStepTimeout = receiveWorkoutTime
         workout.maximumWorkoutSteps = receiveRepeatWorkout
@@ -39,14 +44,28 @@ class SecondViewController: UIViewController {
         // Setup the initial sound file path
         workout.soundFile("workoutSetFinished.wav")
     
-        // Setup countdown
-        startTimer(#selector(countdownAction))
-        
         // Setup the initial view elements
         setupWorkoutView((String(countdownTime)), true,
                                  "", false,
                                  "Prepare!", true,
                                  false)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        stopTimer()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        // (Re-)start counters
+        if (workout.isWorkoutStepRunning == false) {
+            // Setup countdown timer
+            startTimer(#selector(countdownAction))
+        }
+        else {
+            // Setup workout timer
+            startTimer(#selector(workoutAction))
+        }
     }
     
     @objc func countdownAction() {
@@ -77,7 +96,7 @@ class SecondViewController: UIViewController {
         // Decrease counter value every seconds
         workout.workoutStepTimeout -= 1
     
-    
+        // Preload the buffers once the workout timer reaches 2s until workout finishes
         if (workout.workoutStepTimeout == 2) {
             workout.workoutStepFinished?.prepareToPlay() // Prepare to play the sound
         }
@@ -119,6 +138,8 @@ class SecondViewController: UIViewController {
                 // Whole workout set finished
                 navigationController?.popViewController(animated: true)
                 dismiss(animated: true, completion: nil)
+                workoutCounter += 1
+                appLocalData.set(workoutCounter, forKey: "workoutCounter")
             }
         }
     
@@ -187,7 +208,7 @@ class SecondViewController: UIViewController {
             workout.isWorkoutStepRunning = true
         }
     }
-    
+
     func handleWorkoutSetFinishedAlert (_ state: Bool)
     {
         if (state == true) {

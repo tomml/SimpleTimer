@@ -10,14 +10,14 @@ import UIKit
 import AVFoundation
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
 
     var tP = TimerPrimitives()
     
     @IBOutlet weak var textWorkout_Outlet: UITextField!
     @IBOutlet weak var textRest_Outlet: UITextField!
     @IBOutlet weak var textRepeat_Outlet: UITextField!
-    
+    @IBOutlet weak var lblWorkoutCounter: UILabel!
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
@@ -40,6 +40,15 @@ class ViewController: UIViewController {
     {
         super.viewDidLoad()
         
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+        
+        //Declare delgates for text fields
+        textWorkout_Outlet.delegate = self
+        textRepeat_Outlet.delegate = self
+        textRest_Outlet.delegate = self
+
         updateView(String(tP.workoutTime), String(tP.restTime), String(tP.repeatWorkout))
     }
             
@@ -53,6 +62,28 @@ class ViewController: UIViewController {
     
     @IBAction func updateModel_RepeatWorkout(_ sender: Any) {
         tP.repeatWorkout = Int(textRepeat_Outlet.text!) ?? 0
+    }
+    
+    //Calls this function when the tap is recognized.
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
+    
+    // shouldChangeCharactersIn
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else {
+            return false
+        }
+        let updateText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        // Define valid characters for text field input
+        let invalidCharacters = CharacterSet(charactersIn: "0123456789").inverted
+        
+        // Allow up to 999s timers and numbers only
+        return updateText.count < 4 && string.rangeOfCharacter(from: invalidCharacters) == nil
     }
 }
 
