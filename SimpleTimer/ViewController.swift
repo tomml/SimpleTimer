@@ -13,6 +13,7 @@ import AVFoundation
 class ViewController: UIViewController, UITextFieldDelegate {
 
     var tP = TimerPrimitives()
+    let appLocalData = UserDefaults.standard
     
     @IBOutlet weak var textWorkout_Outlet: UITextField!
     @IBOutlet weak var textRest_Outlet: UITextField!
@@ -39,6 +40,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        let wC = appLocalData.integer(forKey: "wC")
+        // Update workout counter label
+        lblWorkoutCounter.text = String(wC)
         
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
@@ -83,7 +88,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         let invalidCharacters = CharacterSet(charactersIn: "0123456789").inverted
         
         // Allow up to 999s timers and numbers only
-        return updateText.count < 4 && string.rangeOfCharacter(from: invalidCharacters) == nil
+        return (updateText.count < 4) && (string.rangeOfCharacter(from: invalidCharacters) == nil)
     }
-}
+    
+    func setWorkoutCnt(_ workoutFinished: Bool) {
+        var wC = appLocalData.integer(forKey: "wC")
+        if (workoutFinished == true) {
+            wC += 1
+        }
+        appLocalData.set(wC, forKey: "wC")
+        lblWorkoutCounter.text = String(wC)
+    }
 
+}

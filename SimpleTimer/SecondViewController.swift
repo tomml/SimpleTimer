@@ -22,9 +22,6 @@ class SecondViewController: UIViewController {
     var countdownTime: Int = 10
     
     var lblText: String = "Workout"
-    var workoutCounter = 0
-    
-    let appLocalData = UserDefaults.standard
 
     @IBOutlet weak var btnPauseWorkout: UIButton!
     @IBOutlet weak var lblWorkoutTime: UILabel!
@@ -35,7 +32,7 @@ class SecondViewController: UIViewController {
         
         super.viewDidLoad()
         
-        appLocalData.set(workoutCounter, forKey: "workoutCounter")
+        //appLocalData.set(workoutCounter, forKey: "workoutCounter")
         
         // Set the initial timing values for the workout
         workout.workoutStepTimeout = receiveWorkoutTime
@@ -49,6 +46,10 @@ class SecondViewController: UIViewController {
                                  "", false,
                                  "Prepare!", true,
                                  false)
+    }
+    
+    func workoutFinished() -> Bool {
+        return true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -96,7 +97,7 @@ class SecondViewController: UIViewController {
         // Decrease counter value every seconds
         workout.workoutStepTimeout -= 1
     
-        // Preload the buffers once the workout timer reaches 2s until workout finishes
+        // Preload the buffers once the workout timer reaches 2s
         if (workout.workoutStepTimeout == 2) {
             workout.workoutStepFinished?.prepareToPlay() // Prepare to play the sound
         }
@@ -137,9 +138,8 @@ class SecondViewController: UIViewController {
             else {
                 // Whole workout set finished
                 navigationController?.popViewController(animated: true)
-                dismiss(animated: true, completion: nil)
-                workoutCounter += 1
-                appLocalData.set(workoutCounter, forKey: "workoutCounter")
+                if let vc = presentingViewController as? ViewController {
+                    dismiss(animated: true, completion: { vc.setWorkoutCnt(true) } ) }
             }
         }
     
